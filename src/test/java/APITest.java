@@ -10,16 +10,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import java.io.IOException;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class APITest {
 
     @Test
-    public void test1() throws IOException {
-        String answer = postRequest(ConfProperties.getProperty("api"), "1", "2");
-        System.out.println(answer);
+    public void test1() {
+        String answer = postRequest(ConfProperties.getProperty("api"));
+
+
         JSONObject answerJSON = stringToJson(answer);
         JSONObject a = answerJSON.getJSONObject("list");
         String getAnswer = getRequest(ConfProperties.getProperty("api") + "/" + a.getString("id"));
@@ -30,9 +30,9 @@ public class APITest {
     }
 
     @Test
-    public void test2() throws IOException {
-        String answer = postRequest(ConfProperties.getProperty("api"), "1", "2");
-        System.out.println(answer);
+    public void test2() {
+        String answer = postRequest(ConfProperties.getProperty("api"));
+
         JSONObject answerJSON = stringToJson(answer);
         JSONObject a = answerJSON.getJSONObject("list");
         String deleteAnswer = deleteRequest(ConfProperties.getProperty("api") + "/" + a.getString("id"));
@@ -42,10 +42,10 @@ public class APITest {
         String getAnswer = getRequest(ConfProperties.getProperty("api") + "/" + a.getString("id"));
         JSONObject answerGetJSON = stringToJson(getAnswer);
         System.out.println(getAnswer);
-        assertTrue(answerGetJSON.getString("code").equals("shoppingList.notFound"));
+        assertEquals("shoppingList.notFound", answerGetJSON.getString("code"));
     }
 
-    public String postRequest(String URL, String name, String primary) throws IOException {
+    public String postRequest(String URL) {
 
         HttpClient httpClient = HttpClientBuilder.create().build();
         try {
@@ -59,6 +59,8 @@ public class APITest {
             request.setEntity(params);
             HttpResponse response = httpClient.execute(request);
             String jsonString = EntityUtils.toString(response.getEntity());
+            System.out.println(jsonString);
+
             return jsonString;
         } catch (Exception ex) {
         }
@@ -66,7 +68,7 @@ public class APITest {
         return null;
     }
 
-    public String getRequest(String URL) throws IOException {
+    public String getRequest(String URL) {
         HttpClient httpClient = HttpClientBuilder.create().build();
         try {
             HttpGet request = new HttpGet(URL);
@@ -75,13 +77,14 @@ public class APITest {
             request.addHeader("Authorization", "Bearer " + ConfProperties.getProperty("token"));
             HttpResponse response = httpClient.execute(request);
             String jsonString = EntityUtils.toString(response.getEntity());
+            System.out.println(jsonString);
             return jsonString;
         } catch (Exception ex) {
         }
         return null;
     }
 
-    public String deleteRequest(String URL) throws IOException {
+    public String deleteRequest(String URL) {
         HttpClient httpClient = HttpClientBuilder.create().build();
         try {
             HttpDelete request = new HttpDelete(URL);
@@ -90,6 +93,7 @@ public class APITest {
             request.addHeader("Authorization", "Bearer " + ConfProperties.getProperty("token"));
             HttpResponse response = httpClient.execute(request);
             String jsonString = EntityUtils.toString(response.getEntity());
+            System.out.println(jsonString);
             return jsonString;
         } catch (Exception ex) {
         }
@@ -97,12 +101,11 @@ public class APITest {
     }
 
     public JSONObject stringToJson(String first) {
-        JSONObject jsonObject = null;
         try {
-            jsonObject = new JSONObject(first);
+            return new JSONObject(first);
         } catch (JSONException err) {
             System.out.println(err.toString());
         }
-        return jsonObject;
+        return null;
     }
 }
