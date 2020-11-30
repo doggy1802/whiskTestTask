@@ -59,7 +59,7 @@ public class UITest {
 
         System.out.println("All goods are in the cart");
 
-        driver.quit();
+        driver.close();
         System.out.println("Bro shutdown");
 
     }
@@ -95,8 +95,7 @@ public class UITest {
             int index = (int) (rnd.nextFloat() * CAPSCHARS.length());
             rand.append(CAPSCHARS.charAt(index));
         }
-        String randStr = rand.toString();
-        return randStr;
+        return rand.toString();
 
     }
 
